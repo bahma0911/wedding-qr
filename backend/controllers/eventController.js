@@ -21,7 +21,8 @@ const createEvent = async (req, res) => {
       organizerId,
     });
 
-    const uploadUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/event/${event._id}/upload`;
+    const clientUrl = process.env.CLIENT_URL || 'https://wedding-qr-front.onrender.com';
+    const uploadUrl = `${clientUrl}/event/${event._id}/upload`;
     const qrCodeDataUrl = await QRCode.toDataURL(uploadUrl);
 
     event.qrCodeUrl = qrCodeDataUrl;
