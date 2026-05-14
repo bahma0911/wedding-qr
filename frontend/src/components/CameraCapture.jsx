@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 const CameraCapture = ({ captureMode, setCaptureMode, onCapture, remainingBytes }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const cameraContainerRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
@@ -81,8 +82,29 @@ const CameraCapture = ({ captureMode, setCaptureMode, onCapture, remainingBytes 
     }
   };
 
-  const toggleCamera = () => {
-    setIsCameraOpen(!isCameraOpen);
+  const toggleCamera = async () => {
+    const newIsOpen = !isCameraOpen;
+    setIsCameraOpen(newIsOpen);
+    
+    if (newIsOpen) {
+      // Check if small screen (less than 768px width)
+      if (window.innerWidth < 768 && cameraContainerRef.current) {
+        try {
+          await cameraContainerRef.current.requestFullscreen();
+        } catch (error) {
+          console.warn('Fullscreen not supported or failed:', error);
+        }
+      }
+    } else {
+      // Exit fullscreen when closing camera
+      if (document.fullscreenElement) {
+        try {
+          await document.exitFullscreen();
+        } catch (error) {
+          console.warn('Exit fullscreen failed:', error);
+        }
+      }
+    }
   };
 
   return (
@@ -99,7 +121,7 @@ const CameraCapture = ({ captureMode, setCaptureMode, onCapture, remainingBytes 
           </button>
         </div>
       ) : (
-        <div className="relative rounded-[28px] border border-[#d8c1b8] bg-black overflow-hidden">
+        <div ref={cameraContainerRef} className="relative rounded-[28px] border border-[#d8c1b8] bg-black overflow-hidden">
           <video
             ref={videoRef}
             autoPlay
