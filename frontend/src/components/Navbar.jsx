@@ -14,6 +14,7 @@ const Navbar = () => {
           <Link className="text-sm text-[#6f4b3a] hover:text-[#8a5b47]" to="/event/123/gallery">Gallery</Link>
           {user ? (
             <>
+              <Link className="text-sm text-[#6f4b3a] hover:text-[#8a5b47]" to="/dashboard">Dashboard</Link>
               <button
                 onClick={() => {
                   logout();
