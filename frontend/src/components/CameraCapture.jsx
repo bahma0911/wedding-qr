@@ -3,7 +3,6 @@ import { useRef, useState, useEffect } from 'react';
 const CameraCapture = ({ captureMode, setCaptureMode, onCapture, remainingBytes }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const cameraContainerRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
@@ -82,29 +81,8 @@ const CameraCapture = ({ captureMode, setCaptureMode, onCapture, remainingBytes 
     }
   };
 
-  const toggleCamera = async () => {
-    const newIsOpen = !isCameraOpen;
-    setIsCameraOpen(newIsOpen);
-    
-    if (newIsOpen) {
-      // Check if small screen (less than 768px width)
-      if (window.innerWidth < 768 && cameraContainerRef.current) {
-        try {
-          await cameraContainerRef.current.requestFullscreen();
-        } catch (error) {
-          console.warn('Fullscreen not supported or failed:', error);
-        }
-      }
-    } else {
-      // Exit fullscreen when closing camera
-      if (document.fullscreenElement) {
-        try {
-          await document.exitFullscreen();
-        } catch (error) {
-          console.warn('Exit fullscreen failed:', error);
-        }
-      }
-    }
+  const toggleCamera = () => {
+    setIsCameraOpen(prev => !prev);
   };
 
   return (
@@ -120,59 +98,64 @@ const CameraCapture = ({ captureMode, setCaptureMode, onCapture, remainingBytes 
             Open Camera
           </button>
         </div>
-      ) : (
-        <div ref={cameraContainerRef} className="relative rounded-[28px] border border-[#d8c1b8] bg-black overflow-hidden">
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            className="w-full h-64 object-cover"
-          />
-          <canvas ref={canvasRef} className="hidden" />
-          
-          {/* Overlay Controls */}
-          <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-            <div className="flex gap-2">
-              {['photo', 'video'].map(mode => (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setCaptureMode(mode)}
-                  className={`rounded-full px-3 py-1 text-xs font-semibold transition ${captureMode === mode ? 'bg-[#8a5b47] text-white' : 'bg-white/80 text-[#6b4a3f] hover:bg-white'}`}
-                >
-                  {mode === 'photo' ? 'Photo' : 'Video'}
-                </button>
-              ))}
-            </div>
-            <div className="rounded-lg bg-black/50 px-3 py-2 text-xs font-semibold text-white">
-              <p>Remaining</p>
-              <p>{(remainingBytes / 1024 / 1024).toFixed(1)} MB</p>
+      ) : null}
+
+      {isCameraOpen && (
+        <div className="fixed inset-0 z-50 bg-black">
+          <div className="absolute inset-0">
+            <video
+              ref={videoRef}
+              autoPlay
+              playsInline
+              muted
+              className="h-full w-full object-cover"
+            />
+            <canvas ref={canvasRef} className="hidden" />
+          </div>
+
+          <div className="absolute inset-x-0 top-4 px-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex gap-2 rounded-full bg-black/60 p-2">
+                {['photo', 'video'].map(mode => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setCaptureMode(mode)}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${captureMode === mode ? 'bg-[#8a5b47] text-white' : 'bg-white/90 text-[#6b4a3f] hover:bg-white'}`}
+                  >
+                    {mode === 'photo' ? 'Photo' : 'Video'}
+                  </button>
+                ))}
+              </div>
+              <div className="rounded-full bg-black/60 px-3 py-2 text-xs font-semibold text-white">
+                <p className="leading-none">Remaining</p>
+                <p className="mt-1 text-base">{(remainingBytes / 1024 / 1024).toFixed(1)} MB</p>
+              </div>
             </div>
           </div>
 
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
+          <div className="absolute inset-x-0 bottom-6 flex items-center justify-center gap-4 px-4">
             {captureMode === 'photo' ? (
               <button
                 type="button"
                 onClick={capturePhoto}
-                className="rounded-full bg-white p-4 shadow-lg"
+                className="rounded-full bg-white p-5 shadow-xl"
               >
-                <div className="w-6 h-6 bg-[#8a5b47] rounded-full"></div>
+                <div className="w-8 h-8 rounded-full bg-[#8a5b47]" />
               </button>
             ) : (
               <button
                 type="button"
                 onClick={isRecording ? stopRecording : startRecording}
-                className={`rounded-full p-4 shadow-lg ${isRecording ? 'bg-red-500' : 'bg-white'}`}
+                className={`rounded-full p-5 shadow-xl ${isRecording ? 'bg-red-500' : 'bg-white'}`}
               >
-                <div className={`w-6 h-6 rounded-full ${isRecording ? 'bg-white' : 'bg-red-500'}`}></div>
+                <div className={`w-8 h-8 rounded-full ${isRecording ? 'bg-white' : 'bg-red-500'}`} />
               </button>
             )}
             <button
               type="button"
               onClick={toggleCamera}
-              className="rounded-full bg-white/80 p-3 text-[#6b4a3f] hover:bg-white"
+              className="rounded-full bg-white/90 p-3 text-[#6b4a3f] shadow-lg"
             >
               ✕
             </button>
