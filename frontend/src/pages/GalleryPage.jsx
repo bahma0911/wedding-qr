@@ -29,26 +29,47 @@ const GalleryPage = () => {
     return `${eventId}_${item._id}.${extension}`;
   };
 
-  const downloadFile = (url, filename) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadFile = async (url, filename) => {
+    try {
+      const response = await fetch(url, { mode: 'cors' });
+      if (!response.ok) throw new Error('Failed to fetch file');
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
-  const downloadItems = items => {
+  const downloadItems = async items => {
     if (!items.length) return;
-    items.forEach(item => downloadFile(item.mediaUrl, createFilename(item)));
+    for (const item of items) {
+      // download sequentially to avoid browser popup blocking
+      // and give the user a chance to save each file.
+      // eslint-disable-next-line no-await-in-loop
+      await downloadFile(item.mediaUrl, createFilename(item));
+    }
   };
 
-  const downloadAll = () => downloadItems(media);
+  const downloadAll = async () => {
+    await downloadItems(media);
+  };
 
-  const downloadSelected = () => {
+  const downloadSelected = async () => {
     const selectedItems = media.filter(item => selectedIds.includes(item._id));
-    downloadItems(selectedItems);
+    await downloadItems(selectedItems);
   };
 
   const openViewer = index => setViewerIndex(index);
