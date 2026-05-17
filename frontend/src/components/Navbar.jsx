@@ -8,7 +8,7 @@ const Navbar = () => {
   return (
     <nav className="border-b border-[#e6d7d1] bg-white/80 backdrop-blur-md px-6 py-4 shadow-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-        <Link to="/" className="text-xl font-semibold text-[#8a5b47]">WedSnap Ethiopia</Link>
+        <Link to="/" className="text-xl font-semibold text-[#8a5b47]">SnapGallery Ethiopia</Link>
         <div className="flex items-center gap-3">
           <Link className="text-sm text-[#6f4b3a] hover:text-[#8a5b47]" to="/">Home</Link>
           <Link className="text-sm text-[#6f4b3a] hover:text-[#8a5b47]" to="/event/123/gallery">Gallery</Link>

@@ -1,4 +1,4 @@
-# WedSnap Ethiopia
+# SnapGallery Ethiopia
 
 A full-stack wedding QR photo sharing application for Ethiopian weddings.
 

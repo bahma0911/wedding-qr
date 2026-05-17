@@ -1,7 +1,7 @@
 {
-  "name": "wedsnap-backend",
+  "name": "snapgallery-backend",
   "version": "1.0.0",
-  "description": "WedSnap Ethiopia backend API",
+  "description": "SnapGallery backend API",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

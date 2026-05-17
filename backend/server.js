@@ -19,7 +19,12 @@ app.use('/api/events', eventRoutes);
 app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to WedSnap Ethiopia API' });
+  res.json({ message: 'Welcome to SnapGallery API' });
+});
+
+// Updated site name
+app.get('/health', (req, res) => {
+  res.json({ message: 'SnapGallery API is running' });
 });
 
 const PORT = process.env.PORT || 5000;

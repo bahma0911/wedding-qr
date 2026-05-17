@@ -6,7 +6,7 @@ const HomePage = () => {
       <section className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div className="space-y-6">
           <span className="inline-flex rounded-full bg-blush px-4 py-1 text-sm font-semibold text-[#8a5b47]">Wedding photo sharing made simple</span>
-          <h1 className="text-4xl font-semibold text-[#5d4037] sm:text-5xl">WedSnap Ethiopia</h1>
+          <h1 className="text-4xl font-semibold text-[#5d4037] sm:text-5xl">SnapGallery Ethiopia</h1>
           <p className="max-w-xl text-lg leading-8 text-[#563f35]">Create a wedding event, share a QR code, and let guests upload photos and videos instantly — no sign-in needed.</p>
           <div className="flex flex-wrap gap-4">
             <Link to="/register" className="rounded-full bg-[#8a5b47] px-6 py-3 text-white shadow-sm hover:bg-[#6f4535]">Get started</Link>

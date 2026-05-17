@@ -4,25 +4,25 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('wedsnap_token'));
+  const [token, setToken] = useState(localStorage.getItem('snapgallery_token'));
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('wedsnap_user');
+    const storedUser = localStorage.getItem('snapgallery_user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
 
   const login = (newToken, userData) => {
-    localStorage.setItem('wedsnap_token', newToken);
-    localStorage.setItem('wedsnap_user', JSON.stringify(userData));
+    localStorage.setItem('snapgallery_token', newToken);
+    localStorage.setItem('snapgallery_user', JSON.stringify(userData));
     setToken(newToken);
     setUser(userData);
   };
 
   const logout = () => {
-    localStorage.removeItem('wedsnap_token');
-    localStorage.removeItem('wedsnap_user');
+    localStorage.removeItem('snapgallery_token');
+    localStorage.removeItem('snapgallery_user');
     setToken(null);
     setUser(null);
   };

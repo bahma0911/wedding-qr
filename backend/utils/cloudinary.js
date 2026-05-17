@@ -8,7 +8,7 @@ cloudinary.config({
 
 const uploadToCloudinary = (buffer, mimetype, eventId) => {
   const uploadOptions = {
-    folder: `wedsnap/${eventId}`,
+    folder: `snapgallery/${eventId}`,
     resource_type: mimetype.startsWith('video') ? 'video' : 'image',
     quality: 'auto',
     fetch_format: 'auto',
