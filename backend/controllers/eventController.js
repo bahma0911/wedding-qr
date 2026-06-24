@@ -107,4 +107,4 @@ const getEventsByUser = async (req, res) => {
   }
 };
 
-module.exports = { createEvent, grantOrganizerRole, getEventById, getEventsByUser };
+module.exports = { createEvent, grantOrganizerRole, getEventById, getEventsByUser, getUsers };

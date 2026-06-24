@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { uploadMedia } from '../services/uploadService';
 import { getEventById } from '../services/eventService';
 import UploadOptions from '../components/UploadOptions';
-import CameraCapture from '../components/CameraCapture';
 import MediaPreview from '../components/MediaPreview';
 import UploadProgress from '../components/UploadProgress';
 import { compressImageFile, formatFileSize } from '../utils/fileUtils';
@@ -25,7 +24,6 @@ const UploadPage = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [mediaItems, setMediaItems] = useState([]);
-  const [captureMode, setCaptureMode] = useState('photo');
   const [autoUpload, setAutoUpload] = useState(true);
   const [message, setMessage] = useState('');
   const [warnings, setWarnings] = useState([]);
@@ -51,11 +49,6 @@ const UploadPage = () => {
   const totalSelectedSize = useMemo(
     () => mediaItems.reduce((sum, item) => sum + item.file.size, 0),
     [mediaItems]
-  );
-
-  const remainingSize = useMemo(
-    () => Math.max(0, MAX_TOTAL_SIZE - totalSelectedSize),
-    [totalSelectedSize]
   );
 
   const validateFile = file => {
@@ -160,12 +153,7 @@ const UploadPage = () => {
     return nextMediaItems;
   };
 
-  const addCameraFiles = async files => {
-    const nextMediaItems = addFiles(files);
-    if (autoUpload && !isUploading && nextMediaItems.length > 0) {
-      await uploadPendingItems(nextMediaItems);
-    }
-  };
+  
 
   const addGalleryFiles = files => {
     addFiles(files);
@@ -193,8 +181,8 @@ const UploadPage = () => {
       <div className="rounded-[32px] border border-[#ecd8cf] bg-[#fffaf6] p-6 shadow-xl sm:p-8">
         <div className="mb-6 rounded-[28px] bg-[#f9ece7] p-5 text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8a5b47]">Share Your Wedding Memories</p>
-          <h1 className="mt-3 text-3xl font-semibold text-[#7c4a37] sm:text-4xl">Capture or upload your favorite moments</h1>
-          <p className="mt-3 text-sm leading-6 text-[#6b4c3f]">Use the camera toggle or choose multiple gallery files to share memories instantly.</p>
+          <h1 className="mt-3 text-3xl font-semibold text-[#7c4a37] sm:text-4xl">Upload your favorite moments</h1>
+          <p className="mt-3 text-sm leading-6 text-[#6b4c3f]">Choose multiple gallery files to share memories instantly.</p>
         </div>
 
         {event && (
@@ -206,12 +194,7 @@ const UploadPage = () => {
           </div>
         )}
 
-        <CameraCapture
-          captureMode={captureMode}
-          setCaptureMode={setCaptureMode}
-          onCapture={addCameraFiles}
-          remainingBytes={remainingSize}
-        />
+        {/* Camera capture removed: uploads via gallery only */}
 
         <div className="mt-5 rounded-[28px] bg-white p-5 shadow-sm">
           <UploadOptions

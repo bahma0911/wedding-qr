@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, token } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -14,7 +14,19 @@ const Navbar = () => {
           <Link className="text-sm text-[#6f4b3a] hover:text-[#8a5b47]" to="/event/123/gallery">Gallery</Link>
           {user ? (
             <>
-              <Link className="text-sm text-[#6f4b3a] hover:text-[#8a5b47]" to="/dashboard">Dashboard</Link>
+              {(() => {
+                const isAdminFromUser = user && user.role && String(user.role).toLowerCase() === 'admin';
+                if (isAdminFromUser) return true;
+                if (!token) return false;
+                try {
+                  const payload = JSON.parse(atob(token.split('.')[1]));
+                  return payload && payload.role && String(payload.role).toLowerCase() === 'admin';
+                } catch (e) {
+                  return false;
+                }
+              })() && (
+                <Link className="text-sm text-[#6f4b3a] hover:text-[#8a5b47]" to="/dashboard">Dashboard</Link>
+              )}
               <button
                 onClick={() => {
                   logout();
